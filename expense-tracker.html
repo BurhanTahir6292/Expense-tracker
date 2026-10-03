@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f1f3f6;
+      display: flex;
+      justify-content: center;
+      padding: 40px 16px;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      background: #ffffff;
+      padding: 28px 24px;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+      height: fit-content;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 1.6rem;
+      color: #1e293b;
+    }
+
+    .expense-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 22px;
+      width: 100%;
+    }
+
+    .form-inputs-row {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .expense-form input {
+      min-width: 0;
+      padding: 10px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .expense-form .title-input {
+      flex: 1.5;
+    }
+
+    .expense-form .amount-input {
+      flex: 1;
+    }
+
+    .expense-form input:focus {
+      border-color: #3b82f6;
+    }
+
+    .expense-form .add-btn {
+      width: 100%;
+      padding: 11px 16px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    .expense-form .add-btn:hover {
+      background: #2563eb;
+    }
+
+    .total-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .total {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .total-amount {
+      color: #2563eb;
+      font-weight: 700;
+    }
+
+    .clear-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+
+    .clear-btn:hover {
+      background: #fee2e2;
+    }
+
+    .expense-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .expense-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 12px 14px;
+      border-radius: 8px;
+    }
+
+    .item-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #1e293b;
+    }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .item-amount {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 2px 4px;
+      opacity: 0.75;
+    }
+
+    .delete-btn:hover {
+      opacity: 1;
+    }
+
+    .no-expense {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 0.95rem;
+      padding: 20px 0;
+    }
+
+    @media (max-width: 480px) {
+      .form-inputs-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <h1>💰 Expense Tracker</h1>
+
+    <form class="expense-form" id="expenseForm">
+      <div class="form-inputs-row">
+        <input class="title-input" id="titleInput" placeholder="Expense Title" type="text" required>
+        <input class="amount-input" id="amountInput" placeholder="Amount (PKR)" type="number" step="any" min="0.01" required>
+      </div>
+      <button type="submit" class="add-btn">Add Expense</button>
+    </form>
+
+    <div class="total-container">
+      <h3 class="total">Total Expense: <span class="total-amount" id="totalAmount">Rs. 0.00</span></h3>
+      <button class="clear-btn" id="clearBtn">Clear All</button>
+    </div>
+
+    <div class="expense-list" id="expenseList"></div>
+  </div>
+
+  <script>
+    const defaultExpenses = [
+      { id: 1, title: 'Internet Charges', amount: 2500 },
+      { id: 2, title: 'Train Ticket', amount: 1200 }
+    ];
+
+    let expenses = JSON.parse(localStorage.getItem('expenses')) || defaultExpenses;
+
+    const expenseForm = document.getElementById('expenseForm');
+    const titleInput = document.getElementById('titleInput');
+    const amountInput = document.getElementById('amountInput');
+    const totalAmount = document.getElementById('totalAmount');
+    const expenseList = document.getElementById('expenseList');
+    const clearBtn = document.getElementById('clearBtn');
+
+    function saveAndRender() {
+      localStorage.setItem('expenses', JSON.stringify(expenses));
+      render();
+    }
+
+    function render() {
+      const total = expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
+      totalAmount.innerText = 'Rs. ' + total.toFixed(2);
+
+      if (expenses.length === 0) {
+        expenseList.innerHTML = '<p class="no-expense">No Expenses Yet</p>';
+        clearBtn.style.display = 'none';
+        return;
+      }
+
+      clearBtn.style.display = 'inline-block';
+      expenseList.innerHTML = expenses.map(item => `
+        <div class="expense-item">
+          <span class="item-title">${item.title}</span>
+          <div class="item-actions">
+            <span class="item-amount">Rs. ${Number(item.amount).toFixed(2)}</span>
+            <button class="delete-btn" onclick="deleteExpense(${item.id})">❌</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteExpense(id) {
+      expenses = expenses.filter(item => item.id !== id);
+      saveAndRender();
+    }
+
+    expenseForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = titleInput.value.trim();
+      const amount = parseFloat(amountInput.value);
+
+      if (!title || isNaN(amount) || amount <= 0) {
+        alert('Please fill all fields with valid values!');
+        return;
+      }
+
+      expenses.unshift({
+        id: Date.now(),
+        title,
+        amount
+      });
+
+      titleInput.value = '';
+      amountInput.value = '';
+      titleInput.focus();
+      saveAndRender();
+    });
+
+    clearBtn.addEventListener('click', () => {
+      if (confirm('Clear all expenses?')) {
+        expenses = [];
+        saveAndRender();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

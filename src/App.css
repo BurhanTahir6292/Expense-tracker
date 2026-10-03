@@ -1,0 +1,194 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: #f1f3f6;
+  color: #333333;
+  min-height: 100vh;
+}
+
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 16px;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  padding: 28px 24px;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.form-inputs-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.expense-form input {
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.expense-form .title-input {
+  flex: 1.5;
+}
+
+.expense-form .amount-input {
+  flex: 1;
+}
+
+.expense-form input:focus {
+  border-color: #3b82f6;
+}
+
+.expense-form .add-btn {
+  width: 100%;
+  padding: 11px 16px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color 0.2s;
+}
+
+.expense-form .add-btn:hover {
+  background-color: #2563eb;
+}
+
+.total-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.total {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.total-amount {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.clear-btn:hover {
+  background-color: #fee2e2;
+}
+
+.expense-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  transition: background-color 0.15s;
+}
+
+.expense-item:hover {
+  background: #f1f5f9;
+}
+
+.item-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1e293b;
+  word-break: break-word;
+}
+
+.item-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.item-amount {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 2px 4px;
+  opacity: 0.75;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.delete-btn:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.no-expense {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  padding: 20px 0;
+}
+
+@media (max-width: 480px) {
+  .form-inputs-row {
+    flex-direction: column;
+  }
+}
